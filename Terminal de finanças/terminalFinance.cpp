@@ -7,20 +7,25 @@ void limparTela(){
     system("cls");
 }
 
-void armazenarTransf(float transf, std::vector<float> & armazenador){
-    armazenador.push_back(transf);
+struct Transacao
+{
+    float valor;
+    int tipo;
+};
+
+
+void armazenarTransf(const Transacao & transacao, std::vector<Transacao> & armazenador){
+    armazenador.push_back(transacao);
 }
 
 
 //registra movimentação no saldo, seja adição ou subtração
-float addTransacao(float saldo, std::vector<float> & extrato) {
-    float valorTransf;
-    int tipoTransf;
+float addTransacao(float saldo, std::vector<Transacao> & extrato) {
+    
+    Transacao novaTransacao;
     float novoSaldo;
     bool processo = true;
 
-    while (processo == true)
-    {
         limparTela();
 
         std::cout << "========== REGISTRO DE MOVIMENTAÇÃO ==========\n\n";
@@ -28,36 +33,27 @@ float addTransacao(float saldo, std::vector<float> & extrato) {
                     "1- Receita\n"
                     "2- Despesa\n"
                     "3- Voltar\n";
-        std::cin >> tipoTransf;
-        if (tipoTransf == 3)
-        {
-            processo = false;
-        }
-        
+        std::cin >> novaTransacao.tipo;
         std::cout << "Digite o valor: ";
-        std::cin >> valorTransf;
+        std::cin >> novaTransacao.valor;
 
-        switch (tipoTransf)
+        switch (novaTransacao.tipo)
         {
         case 1:
-            novoSaldo = saldo + valorTransf;
-            std::cout << "Receita: +" << std::fixed << std::setprecision(2) << valorTransf << std::endl;
+            novoSaldo = saldo + novaTransacao.valor;
+            std::cout << "Receita: +" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
             std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
-            armazenarTransf(valorTransf, extrato);
             break;
         case 2:
-            novoSaldo = saldo - valorTransf;
-            std::cout << "Receita: -" << std::fixed << std::setprecision(2) << valorTransf << std::endl;
+            novoSaldo = saldo - novaTransacao.valor;
+            std::cout << "Receita: -" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
             std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
-            armazenarTransf(-valorTransf, extrato);
             break;
         default:
             std::cout << "Digite uma ação válida";
             break;
         }
-    }
-    
-    
+        armazenarTransf(novaTransacao, extrato);
     
     return novoSaldo;
 }
@@ -76,15 +72,13 @@ void mostrarSaldo(float saldo) {
     {
         std::cout << "Digite uma ação válida";
     }
-    
 }
-
 
 int main(){
     bool executando = true;
     int proxTela;
     float saldoAtual = 0.0;
-    std::vector<float> atualExtrato;
+    std::vector<Transacao> atualExtrato;
     
     //roda o código
     while (executando)
@@ -112,8 +106,16 @@ int main(){
         case 3:
             limparTela();
             std::cout << "========== EXTRATO ==========\n\n";
-            for (float t : atualExtrato) {
-                std::cout << t << std::fixed << std::setprecision(2) << std::endl;
+            for (Transacao t : atualExtrato) {
+                std::cout << "Valor: " << t.valor << std::fixed << std::setprecision(2);
+                if (t.tipo == 1)
+                {
+                    std::cout << "| Receita" << std::endl;
+                }
+                else if (t.tipo == 2)
+                {
+                    std::cout << "| Despesa" << std::endl;
+                }
                 
             }
             
