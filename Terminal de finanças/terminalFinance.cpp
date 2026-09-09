@@ -34,6 +34,11 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
                     "2- Despesa\n"
                     "3- Voltar\n";
         std::cin >> novaTransacao.tipo;
+        if (novaTransacao.tipo == 3)
+        {
+            return saldo;
+        }
+        
         std::cout << "Digite o valor: ";
         std::cin >> novaTransacao.valor;
 
@@ -110,11 +115,11 @@ int main(){
                 std::cout << "Valor: " << t.valor << std::fixed << std::setprecision(2);
                 if (t.tipo == 1)
                 {
-                    std::cout << "| Receita" << std::endl;
+                    std::cout << " | Receita" << std::endl;
                 }
                 else if (t.tipo == 2)
                 {
-                    std::cout << "| Despesa" << std::endl;
+                    std::cout << " | Despesa" << std::endl;
                 }
                 
             }
