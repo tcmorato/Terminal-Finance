@@ -24,43 +24,58 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
     
     Transacao novaTransacao;
     float novoSaldo;
-    bool processo = true;
+    bool selecionouTipo = false;
 
+    while (selecionouTipo == false)
+    {
+    
         limparTela();
-
         std::cout << "========== REGISTRO DE MOVIMENTAÇÃO ==========\n\n";
         std::cout << "Qual é o tipo de transferência?\n\n"
                     "1- Receita\n"
                     "2- Despesa\n"
                     "3- Voltar\n";
         std::cin >> novaTransacao.tipo;
-        if (novaTransacao.tipo == 3)
+        if (std::cin.fail())
         {
-            return saldo;
+            std::cout << "Erro! Digite um tipo válido.";
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            continue;
         }
-        
-        std::cout << "Digite o valor: ";
-        std::cin >> novaTransacao.valor;
 
-        switch (novaTransacao.tipo)
-        {
-        case 1:
-            novoSaldo = saldo + novaTransacao.valor;
-            std::cout << "Receita: +" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
-            std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
-            break;
-        case 2:
-            novoSaldo = saldo - novaTransacao.valor;
-            std::cout << "Receita: -" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
-            std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
-            break;
-        default:
-            std::cout << "Digite uma ação válida";
-            break;
+        else if (novaTransacao.tipo != 1 && novaTransacao.tipo != 2 && novaTransacao.tipo != 3) {
+            std::cout << "Erro! Digite um tipo válido.";
+            continue;
         }
-        armazenarTransf(novaTransacao, extrato);
+
+        else{
+            selecionouTipo = true;
+        }
+    }
+
     
-    return novoSaldo;
+    std::cout << "Digite o valor: ";
+    std::cin >> novaTransacao.valor;
+
+    switch (novaTransacao.tipo)
+    {
+    case 1:
+        novoSaldo = saldo + novaTransacao.valor;
+        std::cout << "Receita: +" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
+        std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
+        break;
+    case 2:
+        novoSaldo = saldo - novaTransacao.valor;
+        std::cout << "Receita: -" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
+        std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
+        break;
+    default:
+        std::cout << "Digite uma ação válida";
+        break;
+    }
+    armazenarTransf(novaTransacao, extrato);
+    return novoSaldo;    
 }
 
 
