@@ -25,11 +25,11 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
     Transacao novaTransacao;
     float novoSaldo;
     bool selecionouTipo = false;
+    bool digitouValor = false;
+    limparTela();
 
     while (selecionouTipo == false)
     {
-    
-        limparTela();
         std::cout << "========== REGISTRO DE MOVIMENTAÇÃO ==========\n\n";
         std::cout << "Qual é o tipo de transferência?\n\n"
                     "1- Receita\n"
@@ -38,14 +38,14 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
         std::cin >> novaTransacao.tipo;
         if (std::cin.fail())
         {
-            std::cout << "Erro! Digite um tipo válido.";
+            std::cout << "Erro! Digite um tipo válido\n";
             std::cin.clear();
             std::cin.ignore(10000, '\n');
             continue;
         }
 
         else if (novaTransacao.tipo != 1 && novaTransacao.tipo != 2 && novaTransacao.tipo != 3) {
-            std::cout << "Erro! Digite um tipo válido.";
+            std::cout << "Erro! Digite um tipo válido.\n";
             continue;
         }
 
@@ -54,9 +54,27 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
         }
     }
 
+    if (novaTransacao.tipo == 3)
+    {
+        return saldo;
+    }
     
-    std::cout << "Digite o valor: ";
-    std::cin >> novaTransacao.valor;
+    while (digitouValor == false)
+    {
+    
+        std::cout << "Digite o valor: ";
+        std::cin >> novaTransacao.valor;
+        if (std::cin.fail())
+        {
+            std::cout << "Erro! Digite um número valido.\n";
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            continue;
+        }
+        else {
+            digitouValor = true;
+        }
+    }
 
     switch (novaTransacao.tipo)
     {
@@ -67,11 +85,8 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
         break;
     case 2:
         novoSaldo = saldo - novaTransacao.valor;
-        std::cout << "Receita: -" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
+        std::cout << "Despesa: -" << std::fixed << std::setprecision(2) << novaTransacao.valor << std::endl;
         std::cout << "Saldo: " << std::fixed << std::setprecision(2) << novoSaldo << std::endl;
-        break;
-    default:
-        std::cout << "Digite uma ação válida";
         break;
     }
     armazenarTransf(novaTransacao, extrato);
@@ -81,17 +96,15 @@ float addTransacao(float saldo, std::vector<Transacao> & extrato) {
 
 //mostra o saldo atual
 void mostrarSaldo(float saldo) {
-    int voltar;
 
     limparTela();
     std::cout << "========== SALDO ==========\n\n";
     std::cout << "Seu saldo: " << std::fixed << std::setprecision(2) << saldo << std::endl;
-    std::cout << "3- Voltar\n";
-    std::cin >> voltar;
-    if (voltar != 2)
-    {
-        std::cout << "Digite uma ação válida";
-    }
+    std::cout << "\nPressione ENTER para voltar...";
+    
+    std::cin.ignore();
+    std::cin.get();
+
 }
 
 int main(){
@@ -113,7 +126,14 @@ int main(){
                     "4- Sair\n";
 
         std::cin >> proxTela;
-    
+        if (std::cin.fail())
+        {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            continue;
+        }
+        
+
         switch (proxTela)
         {
         case 1:
@@ -126,8 +146,11 @@ int main(){
         case 3:
             limparTela();
             std::cout << "========== EXTRATO ==========\n\n";
+
+            std::cout << std::fixed << std::setprecision(2);
+
             for (Transacao t : atualExtrato) {
-                std::cout << "Valor: " << t.valor << std::fixed << std::setprecision(2);
+                std::cout << "Valor: " << t.valor;
                 if (t.tipo == 1)
                 {
                     std::cout << " | Receita" << std::endl;
